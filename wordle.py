@@ -110,5 +110,5 @@ while guess != word:
             sys.stdout.flush()
             time.sleep(0.015)
         time.sleep(0.04)
-    print(reset,end="")
+    print(reset+'\033[?25h',end="")
     
