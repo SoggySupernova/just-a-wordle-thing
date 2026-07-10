@@ -2,6 +2,14 @@ import colorsys, subprocess, sys, time
 from colorama import init
 subprocess.run('cls',shell=True)
 init()
+
+
+
+
+def clamp(a):
+    return max(0, min(a, 255))
+
+
 def rgb(h_deg, s_pct, l_pct):
     h = h_deg / 360.0
     s = s_pct / 100.0
@@ -10,10 +18,10 @@ def rgb(h_deg, s_pct, l_pct):
     return int(round(r * 255)), int(round(g * 255)), int(round(b * 255))
 
 def ansi(r, g, b):
-    return '\033[48;2;'+str(r)+';'+str(g)+';'+str(b)+'m'
+    return '\033[48;2;'+str(clamp(int(r)))+';'+str(clamp(int(g)))+';'+str(clamp(int(b)))+'m'
 
 def fore(r, g, b):
-    return '\033[38;2;'+str(r)+';'+str(g)+';'+str(b)+'m'
+    return '\033[38;2;'+str(clamp(int(r)))+';'+str(clamp(int(g)))+';'+str(clamp(int(b)))+'m'
 reset = '\033[0m'
 
 def hsl(h, s, l):
@@ -58,9 +66,9 @@ while guess != word:
     else:
 
         # Clear not allowed text
-        for i in range(10):
-            nr, ng, nb = fade(212, 45, 36, 1-0.09*i)
-            sys.stdout.write('\r\033[2K'+"> "+fore(nr, ng, nb)+'Not allowed'+reset)
+        for i in range(15):
+            nr, ng, nb = fade(212, 45, 36, 1-0.066*i)
+            sys.stdout.write('\r\033[2K'+"> "+fore(nr, ng, nb)+'Not a valid word'+reset)
             sys.stdout.flush()
             time.sleep(.03)
 
@@ -95,18 +103,18 @@ while guess != word:
         b = 0
         colstring = ""
         if colors[i] == "green":
-            r, g, b = (0, 185, 0)
+            r, g, b = (108, 169, 101)
         if colors[i] == "yellow":
-            r,g,b = (170, 170, 0)
+            r,g,b = (200, 182, 83)
         if colors[i] == "gray":
-            r,g,b = (128, 128, 128)
+            r,g,b = (120, 124, 127)
         # Animation
         for w in range(10):
             if w > 0:
                 sys.stdout.write('\033[K\033[3D')
                 sys.stdout.flush()
             newr, newg, newb = fade(r,g,b,w/10)
-            print("\033[?25l"+ansi(newr, newg, newb),guess[i],end=" "+reset)
+            print("\033[?25l"+fore(242,242,242)+ansi(newr,newg,newb),guess[i],end=" "+reset)
             sys.stdout.flush()
             time.sleep(0.015)
         time.sleep(0.04)
